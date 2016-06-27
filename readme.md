@@ -1,3 +1,7 @@
+# Info
+
+This script allows you to input a paradox db file and output serveral files in CSV format. 
+
 # Install
 
 - clone this repo
