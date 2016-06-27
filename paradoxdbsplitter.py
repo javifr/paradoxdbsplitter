@@ -21,39 +21,38 @@ def main(argv):
     elif opt in ("-o", "--ofile"):
        outputfile = arg
     elif opt in ("-c", "--headers"):
-       cabeceras = arg.split(",")
+       fileheaders = arg.split(",")
 
-    # elif opt in ("-b", "--block"):
-    #    bloque = arg
 
-  bloque = 100000
+  file_rows_size = 100000
   table = Table(inputfile)
 
   if 'headershelp' in locals():
     print(table[0])
     sys.exit()
 
-  registros = len(table)
-  print "Dimension filas tabla: %s." % registros
-  print "Cantidad de registros por fichero: %d." % bloque
-  print "Cabeceras que se van a usar: %s." % cabeceras
-  print "Ruta del archivo: %s." % inputfile
+  table_rows_count = len(table)
+  iterations = table_rows_count/file_rows_size
 
-  iteraciones = registros/bloque
+  print "Table rows: %s." % table_rows_count
+  print "Rows per file: %d." % file_rows_size
+  print "File headers to be extracted: %s." % fileheaders
+  print "File (db) path: %s." % inputfile
+  print "File parts about to generate: %s." % iterations
 
-  print "Ficheros que se van a generar: %s." % iteraciones
+  iteration = 0
 
-  iteracion = 0
+  for iteration in range(0, iterations-1):
 
-  for iteracion in range(0, iteraciones-1):
+    with open(outputfile+"_parte_"+str(iteration)+".csv", "wb") as csvfile:
 
-    with open(outputfile+"_parte_"+str(iteracion)+".csv", "wb") as csvfile:
-
+        # file ready
         spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        # headers
-        spamwriter.writerow(cabeceras)
+        # write headers
+        spamwriter.writerow(fileheaders)
 
-        for row in range(0, iteracion+bloque):
+        # write db lines to csv
+        for row in range(0, iteration+bloque):
           spamwriter.writerow([table[row].NumeroSocio,table[row].FechaAsistencia,table[row].HoraAsistencia,table[row].PuestoEntrada,table[row].AnyoAsistencia,table[row].MesAsistencia,table[row].DiaAsistencia,table[row].Hora])
 
 if __name__ == "__main__":
