@@ -29,7 +29,7 @@ def main(argv):
   bloque = 100000
   table = Table(inputfile)
 
-  if headershelp:
+  if 'headershelp' in locals():
     print(table[0])
     sys.exit()
 
