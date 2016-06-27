@@ -6,7 +6,7 @@
 
 # Use
 
-paradoxdbsplitter.py -i <inputfile> -o <outputfile> -c <headers(hola,adios,pepe)>
+paradoxdbsplitter.py -i socios.db -o ./dump/prueba -c "hora,persona,dni"
 
 - inputfile : paradobx db file
 - outputfile : namespace for the splitted files
