@@ -6,7 +6,7 @@ import sys, getopt
 def main(argv):
 
   try:
-    opts, args = getopt.getopt(argv,"hi:o:c",["ifile=","ofile=","headers="])
+    opts, args = getopt.getopt(argv,"hi:o:c:x",["ifile=","ofile=","headers=","headershelp="])
   except getopt.GetoptError:
     print 'paradoxdbsplitter.py -i <inputfile> -o <outputfile>'
     sys.exit(2)
@@ -14,17 +14,24 @@ def main(argv):
     if opt == '-h':
        print 'paradoxdbsplitter.py -i <inputfile> -o <outputfile> -c <headers(hola,adios,pepe)>'
        sys.exit()
+    elif opt in ("-x", "--helpheaders"):
+      headershelp = 1
     elif opt in ("-i", "--ifile"):
        inputfile = arg
     elif opt in ("-o", "--ofile"):
        outputfile = arg
     elif opt in ("-c", "--headers"):
        cabeceras = arg.split(",")
+
     # elif opt in ("-b", "--block"):
     #    bloque = arg
 
   bloque = 100000
   table = Table(inputfile)
+
+  if headershelp:
+    print(table[0])
+    sys.exit()
 
   registros = len(table)
   print "Dimension filas tabla: %s." % registros
