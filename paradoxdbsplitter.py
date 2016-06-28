@@ -52,7 +52,7 @@ def main(argv):
         spamwriter.writerow(fileheaders)
 
         # write db lines to csv
-        for row in range(0, iteration+bloque):
+        for row in range(iteration*file_rows_size, (iteration*file_rows_size)+file_rows_size):
           spamwriter.writerow([table[row].NumeroSocio,table[row].FechaAsistencia,table[row].HoraAsistencia,table[row].PuestoEntrada,table[row].AnyoAsistencia,table[row].MesAsistencia,table[row].DiaAsistencia,table[row].Hora])
 
 if __name__ == "__main__":
