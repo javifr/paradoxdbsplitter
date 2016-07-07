@@ -1,3 +1,4 @@
+from __future__ import division
 from pypxlib import Table
 import csv
 import math
@@ -21,39 +22,52 @@ def main(argv):
     elif opt in ("-o", "--ofile"):
        outputfile = arg
     elif opt in ("-c", "--headers"):
-       fileheaders = arg.split(",")
+       cabeceras = arg.split(",")
 
+    # elif opt in ("-b", "--block"):
+    #    bloque = arg
 
-  file_rows_size = 100000
+  bloque = 100000
   table = Table(inputfile)
 
   if 'headershelp' in locals():
     print(table[0])
     sys.exit()
 
-  table_rows_count = len(table)
-  iterations = table_rows_count/file_rows_size
+  registros = len(table)
+  print "Dimension filas tabla: %s." % registros
+  print "Cantidad de registros por fichero: %d." % bloque
+  print "Cabeceras que se van a usar: %s." % cabeceras
+  print "Ruta del archivo: %s." % inputfile
 
-  print "Table rows: %s." % table_rows_count
-  print "Rows per file: %d." % file_rows_size
-  print "File headers to be extracted: %s." % fileheaders
-  print "File (db) path: %s." % inputfile
-  print "File parts about to generate: %s." % iterations
+  print registros
+  print bloque
+  print registros/bloque
+  print math.ceil(registros/bloque)
 
-  iteration = 0
+  iteraciones = int(math.ceil(registros/bloque))
 
-  for iteration in range(0, iterations-1):
+  print "Ficheros que se van a generar: %s." % iteraciones
 
-    with open(outputfile+"_parte_"+str(iteration)+".csv", "wb") as csvfile:
+  iteracion = 0
 
-        # file ready
+  for iteracion in range(0, iteraciones):
+
+    print "iteracion numero %s" % iteracion
+    with open(outputfile+"_parte_"+str(iteracion)+".csv", "wb") as csvfile:
+
         spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        # write headers
-        spamwriter.writerow(fileheaders)
+        # headers
+        spamwriter.writerow(cabeceras)
+	start = iteracion * bloque
+	end = start + bloque
+        if end > registros:
+          end = registros
 
-        # write db lines to csv
-        for row in range(iteration*file_rows_size, (iteration*file_rows_size)+file_rows_size):
-          spamwriter.writerow([table[row].NumeroSocio,table[row].FechaAsistencia,table[row].HoraAsistencia,table[row].PuestoEntrada,table[row].AnyoAsistencia,table[row].MesAsistencia,table[row].DiaAsistencia,table[row].Hora])
+        for row in range(start, end):
+
+          #print start
+          spamwriter.writerow([table[row][s].encode('utf8') if type(table[row][s]) is unicode else table[row][s] for s in cabeceras])
 
 if __name__ == "__main__":
    main(sys.argv[1:])
